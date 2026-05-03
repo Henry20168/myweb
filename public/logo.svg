@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="48" viewBox="0 0 220 48" fill="none">
+  <rect width="220" height="48" rx="8" fill="white"/>
+  <g>
+    <text x="12" y="32" font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-weight="800" font-size="26" fill="#E10600">aalikouch</text>
+    <text x="136" y="32" font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-weight="700" font-size="26" fill="#0A0A0B">car</text>
+  </g>
+  <g transform="translate(150,10)">
+    <path d="M0 18c12-8 30-8 44 0" stroke="#E10600" stroke-width="3" stroke-linecap="round"/>
+    <path d="M3 17c9-6 24-6 35 0" stroke="#0A0A0B" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+  </g>
+</svg>

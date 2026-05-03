@@ -1,0 +1,21 @@
+{
+  "name": "aalikouch car | Car Rental Morocco",
+  "short_name": "aalikouch car",
+  "description": "Premium car rental services in Morocco",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#e11d48",
+  "icons": [
+    {
+      "src": "/aalikouch-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/aalikouch-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

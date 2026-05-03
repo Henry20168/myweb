@@ -1,0 +1,246 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+ datasource db {
+  provider = "sqlite"
+  url      = "file:./prisma/dev.db"
+ }
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Car {
+  id           Int         @id @default(autoincrement())
+  brand        String
+  model        String
+  year         Int?
+  category     String
+  transmission String
+  fuel         String
+  seats        Int?
+  doors        Int?
+  luggageCapacity Int?
+  horsepower   Int?
+  engine       String?
+  mileagePolicy String?
+  fuelPolicy    String?
+  minRentalDays Int?      @default(1)
+  rating        Float?    @default(0)
+  gps           Boolean   @default(false)
+  bluetooth     Boolean   @default(false)
+  ac            Boolean   @default(false)
+  usb           Boolean   @default(false)
+  parkingSensors Boolean  @default(false)
+  rearCamera     Boolean  @default(false)
+  cruiseControl  Boolean  @default(false)
+  dailyPrice   Int
+  description  String?
+  status       String       @default("available")
+  offerDiscountPercent Int?
+  offerExpiresAt       DateTime?
+  offerImageUrl        String?
+  images       CarImage[]
+  bookings     Booking[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Motorcycle {
+  id           Int         @id @default(autoincrement())
+  brand        String
+  model        String
+  year         Int?
+  category     String
+  transmission String
+  fuel         String
+  engine       String?
+  engineCC     Int?        // Engine displacement in cc
+  horsepower   Int?
+  mileagePolicy String?
+  fuelPolicy    String?
+  minRentalDays Int?      @default(1)
+  rating        Float?    @default(0)
+  abs           Boolean   @default(false)
+  bluetooth     Boolean   @default(false)
+  usb           Boolean   @default(false)
+  tractionControl Boolean @default(false)
+  cruiseControl  Boolean  @default(false)
+  heatedGrips   Boolean   @default(false)
+  luggageCapacity Int?    // Storage capacity in liters
+  dailyPrice   Int
+  description  String?
+  status       String       @default("available")
+  offerDiscountPercent Int?
+  offerExpiresAt       DateTime?
+  offerImageUrl        String?
+  images       MotorcycleImage[]
+  bookings     MotorcycleBooking[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model CarImage {
+  id        Int      @id @default(autoincrement())
+  url       String
+  isPrimary Boolean  @default(false)
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  carId     Int
+}
+
+model MotorcycleImage {
+  id        Int         @id @default(autoincrement())
+  url       String
+  isPrimary Boolean     @default(false)
+  motorcycle Motorcycle @relation(fields: [motorcycleId], references: [id], onDelete: Cascade)
+  motorcycleId Int
+}
+
+model Booking {
+  id          Int       @id @default(autoincrement())
+  car         Car       @relation(fields: [carId], references: [id])
+  carId       Int
+  customerName String
+  phone       String
+  email       String?
+  pickupCity  String
+  returnCity  String
+  pickupAt    DateTime
+  returnAt    DateTime
+  days        Int
+  price       Int
+  status      String    @default("pending")
+  notes       String?
+  internalNotes String?
+  extras      BookingExtra[]
+  createdAt   DateTime  @default(now())
+}
+
+model MotorcycleBooking {
+  id          Int         @id @default(autoincrement())
+  motorcycle  Motorcycle @relation(fields: [motorcycleId], references: [id])
+  motorcycleId Int
+  customerName String
+  phone       String
+  email       String?
+  pickupCity  String
+  returnCity  String
+  pickupAt    DateTime
+  returnAt    DateTime
+  days        Int
+  price       Int
+  status      String    @default("pending")
+  notes       String?
+  internalNotes String?
+  extras      MotorcycleBookingExtra[]
+  createdAt   DateTime  @default(now())
+}
+
+model Extra {
+  id          Int     @id @default(autoincrement())
+  name        String
+  pricePerDay Int
+  bookingRefs BookingExtra[]
+  motorcycleBookingRefs MotorcycleBookingExtra[]
+}
+
+model BookingExtra {
+  id        Int     @id @default(autoincrement())
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  bookingId Int
+  extra     Extra   @relation(fields: [extraId], references: [id])
+  extraId   Int
+  qty       Int      @default(1)
+}
+
+model MotorcycleBookingExtra {
+  id        Int              @id @default(autoincrement())
+  booking   MotorcycleBooking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  bookingId Int
+  extra     Extra            @relation(fields: [extraId], references: [id])
+  extraId   Int
+  qty       Int              @default(1)
+}
+
+model CompanyInfo {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  address     String?
+  whatsapp    String?
+  phone       String?
+  email       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model ContactMessage {
+  id        Int             @id @default(autoincrement())
+  fullName  String
+  email     String
+  subject   String?
+  body      String
+  status    String          @default("open") // open, answered, closed
+  createdAt DateTime        @default(now())
+  replies   ContactReply[]
+}
+
+model ContactReply {
+  id         Int            @id @default(autoincrement())
+  message    ContactMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  messageId  Int
+  fromAdmin  Boolean        @default(true)
+  body       String
+  createdAt  DateTime       @default(now())
+}
+
+model Client {
+  id          Int      @id @default(autoincrement())
+  fullName    String
+  phone       String
+  email       String?
+  city        String?
+  address     String?
+  nationality String?
+  idType      String?   // e.g. National ID, Passport, Driver License
+  idNumber    String?
+  notes       String?
+  status      String    @default("active") // active, blocked, vip, etc.
+  createdAt   DateTime  @default(now())
+  internalNotes String?
+}
+
+model Visitor {
+  id            Int      @id @default(autoincrement())
+  firstVisitedAt DateTime @default(now())
+  lastVisitedAt DateTime @default(now())
+  visitsCount   Int      @default(1)
+  city          String?
+  country       String?
+  deviceType    String?
+  lastPath      String?
+}
+
+model Employee {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String?
+  role      String  @default("agent") // agent, manager
+  status    String  @default("active")
+  createdAt DateTime @default(now())
+  tasks     Task[]
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  status      String  @default("open") // open, in_progress, done
+  dueDate     DateTime?
+  assignedTo  Employee? @relation(fields: [assignedToId], references: [id])
+  assignedToId Int?
+  createdAt   DateTime @default(now())
+}
